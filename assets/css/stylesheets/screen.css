@@ -66,3 +66,34 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
+
+/* line 9, ../sass/screen.scss */
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+/* line 14, ../sass/screen.scss */
+section.container {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-box-align: center;
+  box-align: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-box-pack: center;
+  box-pack: center;
+}
+
+/* line 22, ../sass/screen.scss */
+canvas {
+  width: 640px;
+  height: 480px;
+  border: 1px solid #ccc;
+}
