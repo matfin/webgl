@@ -15,7 +15,7 @@ gl_experiment.prototype.init = function(){
         gl_context = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
     }
     catch(e){
-        //nothing for now
+        return false;
     }
     
     if(!gl_context){
@@ -25,6 +25,7 @@ gl_experiment.prototype.init = function(){
     else{
         this.gl_context = gl_context;
     }
+    return true;
 }
 
 gl_experiment.prototype.do_something = function(){
@@ -32,15 +33,16 @@ gl_experiment.prototype.do_something = function(){
         this.gl_context.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl_context.enable(this.gl_context.DEPTH_TEST);
         this.gl_context.depthFunc(this.gl_context.LEQUAL);
-        this.gl_context.clear(this.gl.COLOUR_BUFFER_BIT|this.gl_context.DEPTH_BUFFER_BIT);
+        this.gl_context.clear(this.gl_context.COLOR_BUFFER_BIT|this.gl_context.DEPTH_BUFFER_BIT);
     }
 }
 
 gl_experiment.prototype.start = function(){
     console.log('Kicking off WebGL');
     this.canvas = document.getElementById('glcanvas');
-    this.init(this.canvas);
-    
-    
+    if(this.init()){
+        console.log('See a black box?');
+        this.do_something();
+    }
 }
 
