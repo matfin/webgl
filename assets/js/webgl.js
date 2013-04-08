@@ -35,17 +35,16 @@ function WebGL(CID, FSID, VSID){
             this.ShaderProgram = this.GL.createProgram();
             this.GL.attachShader(this.ShaderProgram, FShader);
             this.GL.attachShader(this.ShaderProgram, VShader);
-            this.GL.linkProgram(this.shaderProgram);
-            this.GL.useProgram(this.shaderProgram);
+            this.GL.linkProgram(this.ShaderProgram);
+            this.GL.useProgram(this.ShaderProgram);
             
             //Link Vertex Position attributes from shader
-            this.VertexPosition = this.GL.getAttributeLocation(this.ShaderProgram, 'VertexPosition');
-            this.GL.enableVertexAttributeArray(this.VertexPosition);
+            this.VertexPosition = this.GL.getAttribLocation(this.ShaderProgram, 'VertexPosition');
+            this.GL.enableVertexAttribArray(this.VertexPosition);
             
             //Link Texture Coordinate attribute from shader
             this.VertexTexture = this.GL.getAttribLocation(this.shaderProgram, 'Texturecoord');
             this.GL.enableVertexAttribArray(this.vertextTexture);
-            
         }
     }
     
@@ -57,7 +56,7 @@ function WebGL(CID, FSID, VSID){
         
         var TextureBuffer = this.GL.createBuffer();
         this.GL.bindBuffer(this.GL.ARRAY_BUFFER, TextureBuffer);
-        this.GL.bufferData(tjhis.GL.ARRAY_BUFFER, new Float32Array(Object.Texture), this.GL.STATIC_DRAW);
+        this.GL.bufferData(this.GL.ARRAY_BUFFER, new Float32Array(Object.Texture), this.GL.STATIC_DRAW);
         this.GL.vertexAttribPointer(this.VertexTexture, 2, this.GL.FLOAT, false, 0, 0);
         
         var TriangleBuffer = this.GL.createBuffer();
@@ -69,7 +68,7 @@ function WebGL(CID, FSID, VSID){
         
         this.GL.activeTexture(this.GL.TEXTURE0);
         
-        this.GL.bindTexture(this.FL.TEXTURE_2D, Texture);
+        this.GL.bindTexture(this.GL.TEXTURE_2D, Texture);
         
         this.GL.uniform1i(this.GL.getUniformLocation(this.ShaderProgram, 'uSampler'), 0);
         
@@ -80,7 +79,22 @@ function WebGL(CID, FSID, VSID){
         this.GL.uniformMatrix4fv(tmatrix, false, new Float32Array(TransformMatrix));
         
         this.GL.drawElements(this.GL_TRIANGLES, Object.Triangles.length, this.GL.UNSIGNED_SHORT, 0);
+    }
+    
+    this.LoadTexture = function(Img){
+        var TempTex = this.GL.createTexture();
+        this.GL.bindTexture(this.GL.TEXTURE_2D, TempTex);
         
+        this.GL.pixelStorei(this.GL.UNPACK_FLIP_Y_WEBGL, true);
+        
+        this.GL.texImage2D(this.GL.TEXTURE_2D, 0, this.GL.RGBA, this.GL.RGBA, this.GL.UNSIGNED_BYTE, Img);
+        
+        this.GL.texParameteri(this.GL.TEXTURE_2D, this.GL.TEXTURE_MAG_FILTER, this.GL.LINEAR);
+        this.GL.texParameteri(this.GL.TEXTURE_2D, this.GL.TEXTURE_MIN_FILTER, this.GL.LINEAR_MIPMAP_NEAREST);
+        this.GL.generateMipmap(this.GL.TEXTURE_2D);
+        
+        this.GL.bindTexture(this.GL.TEXTURE_2D, null);
+        return TempTex;
     }
 }
 
@@ -210,7 +224,7 @@ function MakePerspective(FOV, AspectRatio, Closest, Farest){
     
     var A = -(Farest + Closest) / (Farest - Closest);
     var B = -2 * Farest * Closest / (Farest - Closest);
-    var C = (2 * Closest) / ((YLimit * ApsectRatio) * 2);
+    var C = (2 * Closest) / ((YLimit * AspectRatio) * 2);
     var D = (2 * Closest) / (YLimit * 2);
     return [
         C, 0, 0, 0,
@@ -220,7 +234,7 @@ function MakePerspective(FOV, AspectRatio, Closest, Farest){
     ];
 }
 
-function makeTransform(Object){
+function MakeTransform(Object){
     return [
         1, 0, 0, 0,
         0, 1, 0, 0,
