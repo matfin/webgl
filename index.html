@@ -9,8 +9,8 @@
         <meta name="keywords" content="webgl, javascript, experiments">
         <meta name="author" content="Matt Finucane">
         <link rel="stylesheet" type="text/css" href="assets/css/stylesheets/screen.css" />
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/assets/js/webgl.js"></script>
+        <script type="text/javascript" src="/assets/js/sylvester.js"></script>
+        <script type="text/javascript" src="/assets/js/gl.js"></script>
         <script type="text/javascript" src="/assets/js/main.js"></script>
     </head>
     <body>
@@ -25,26 +25,27 @@
         <script id="VertexShader" type="x-shader/x-vertex">
             attribute highp vec3 VertexPosition;
             attribute highp vec2 TextureCoord;
-            
+
+
             uniform highp mat4 TransformationMatrix;
             uniform highp mat4 PerspectiveMatrix;
-            
+
             varying highp vec2 vTextureCoord;
-            
-            void main(void){
-                gl_Position = PerspectiveMatrix * TransformationMatrix * vec4(VertexPosition, 1.0);
-                vTextureCoord = TextureCoord;
+
+            void main(void) {
+                    gl_Position = PerspectiveMatrix * TransformationMatrix * vec4(VertexPosition, 1.0);
+                    vTextureCoord = TextureCoord;
             }
         </script>
         <script id="FragmentShader" type="x-shader/x-fragment">
             varying highp vec2 vTextureCoord;
-            
+		
             uniform sampler2D uSampler;
-            
-            void main(void){
-                highp vec4 texelColor = texture2d(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-                gl_FragColor = texelColor;
-            }
+
+            void main(void) {
+                    highp vec4 texelColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+                    gl_FragColor = texelColor;
+            }     
         </script>
     </body>
 </html>
