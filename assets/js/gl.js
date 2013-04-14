@@ -155,7 +155,7 @@ WebGL.prototype.drawScene = function(){
     this.gl.viewport(0, 0, this.gl.viewportWidth, this.gl.viewportHeight);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     
-    mat4.perspective(30, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 100.0, this.p_matrix);
+    mat4.perspective(45, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 100.0, this.p_matrix);
     
     mat4.identity(this.mv_matrix);
     
@@ -187,7 +187,6 @@ WebGL.prototype.start = function(){
     this.initBuffers();
     
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT)
     this.gl.enable(this.gl.DEPTH_TEST);
     
     this.drawScene();

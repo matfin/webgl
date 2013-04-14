@@ -10,18 +10,9 @@
         <meta name="author" content="Matt Finucane">
         <link rel="stylesheet" type="text/css" href="assets/css/stylesheets/screen.css" />
         <script type="text/javascript" src="/assets/js/glMatrix-0.9.5.min.js"></script>
+        <script type="text/javascript" src="/assets/js/webgl-debug.js"></script>
         <script type="text/javascript" src="/assets/js/gl.js"></script>
         <script type="text/javascript" src="/assets/js/main.js"></script>
-        <script type="text/javascript" src="/assets/js/webgl-debug.js"></script>
-    </head>
-    <body>
-        <section class="container">
-            <canvas id="glcanvas" width="640" height="480">
-                <p>
-                    Need a browser that supports WebGL? Check out <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a>
-                </p>
-            </canvas>
-        </section>
         <!-- Shaders and fragments go in here -->
         <script id="shader-fs" type="x-shader/x-fragment">
             precision mediump float;
@@ -46,5 +37,14 @@
                 vColor = aVertexColor;
             }
         </script>
+    </head>
+    <body>
+        <section class="container">
+            <canvas id="glcanvas" width="500" height="500">
+                <p>
+                    Need a browser that supports WebGL? Check out <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a>
+                </p>
+            </canvas>
+        </section>
     </body>
 </html>
