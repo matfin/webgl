@@ -10,10 +10,12 @@ function WebGL(){
     this.shader_program;
     this.mv_matrix;
     this.p_matrix;
+    /*
     this.triangle_vertex_position_buffer;
     this.triangle_vertex_color_buffer;
     this.square_vertex_position_buffer;
     this.square_vertex_color_buffer;
+    */
 }
 
 WebGL.prototype.initGL = function(canvas){
@@ -80,7 +82,6 @@ WebGL.prototype.initShaders = function(){
     
     this.gl.attachShader(this.shader_program, vertex_shader);
     this.gl.attachShader(this.shader_program, fragment_shader);
-    
     this.gl.linkProgram(this.shader_program);
     
     if(!this.gl.getProgramParameter(this.shader_program, this.gl.LINK_STATUS)){
@@ -100,53 +101,58 @@ WebGL.prototype.initShaders = function(){
     this.shader_program.mvMatrixUniform = this.gl.getUniformLocation(this.shader_program, 'uMVMatrix'); 
 }
 
-WebGL.prototype.setMatrixUniforms = function(){
+WebGL.prototype.setMatrixUniforms = function(){    
     this.gl.uniformMatrix4fv(this.shader_program.pMatrixUniform, false, this.p_matrix);
     this.gl.uniformMatrix4fv(this.shader_program.mvMatrixUniform, false, this.mv_matrix);
 }
 
+var triangle_vertex_position_buffer;
+var triangle_vertex_color_buffer;
+var square_vertex_position_buffer;
+var square_vertex_position_buffer;
+
 WebGL.prototype.initBuffers = function(){
     this.triangle_vertex_position_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.triangle_vertex_position_buffer);
-    var triangle_vertices = [
+    var vertices = [
         0.0, 1.0, 0.0,
         -1.0, -1.0, 0.0,
         1.0, -1.0, 0.0
     ];
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(triangle_vertices), this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
     this.triangle_vertex_position_buffer.itemSize = 3;
     this.triangle_vertex_position_buffer.numItems = 3;
     
     this.triangle_vertex_color_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.triangle_vertex_color_buffer);
-    var triangle_colors = [
+    var colors = [
         1.0, 0.0, 0.0, 1.0,
         0.0, 1.0, 0.0, 1.0,
         0.0, 0.0, 1.0, 1.0
     ];
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(triangle_colors), this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
     this.triangle_vertex_color_buffer.itemSize = 4;
     this.triangle_vertex_color_buffer.numItems = 3;
     
     this.square_vertex_position_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.square_vertex_position_buffer);
-    var square_vertices = [
+    vertices = [
         1.0, 1.0, 0.0,
         -1.0, 1.0, 0.0,
         1.0, -1.0, 0.0,
         -1.0, -1.0, 0.0
     ];
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(square_vertices), this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
     this.square_vertex_position_buffer.itemSize = 3;
     this.square_vertex_position_buffer.numItems = 4;
     
     this.square_vertex_color_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.square_vertex_color_buffer);
-    var square_colors = [];
+    colors = [];
     for(var i = 0; i < 4; i++){
-        square_colors = square_colors.concat([0.5, 0.5, 1.0, 1.0]);
+        colors = colors.concat([0.5, 0.5, 1.0, 1.0]);
     }
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(square_colors), this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
     this.square_vertex_color_buffer.itemSize = 4;
     this.square_vertex_color_buffer.numItems = 4;
 }
@@ -168,7 +174,7 @@ WebGL.prototype.drawScene = function(){
     
     this.setMatrixUniforms();
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.triangle_vertex_position_buffer.numItems);
-    
+   
     mat4.translate(this.mv_matrix, [3.0, 0.0, 0.0]);
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.square_vertex_position_buffer);
     this.gl.vertexAttribPointer(this.shader_program.vertexPositionAttribute, this.square_vertex_position_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
@@ -181,7 +187,7 @@ WebGL.prototype.drawScene = function(){
 }
 
 WebGL.prototype.start = function(){
-    var canvas = document.getElementById('glcanvas');
+    var canvas = document.getElementById('myglcanvas');
     this.initGL(canvas);
     this.initShaders();
     this.initBuffers();
@@ -190,10 +196,6 @@ WebGL.prototype.start = function(){
     this.gl.enable(this.gl.DEPTH_TEST);
     
     this.drawScene();
-    console.log(WebGLDebugUtils.glEnumToString(this.gl_debugger.getError()));
-    
-    var error = this.gl.getError();
-    console.log(error);
 }
 
 
