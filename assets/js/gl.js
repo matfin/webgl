@@ -10,12 +10,10 @@ function WebGL(){
     this.shader_program;
     this.mv_matrix;
     this.p_matrix;
-    /*
     this.triangle_vertex_position_buffer;
     this.triangle_vertex_color_buffer;
     this.square_vertex_position_buffer;
     this.square_vertex_color_buffer;
-    */
 }
 
 WebGL.prototype.initGL = function(canvas){
@@ -91,7 +89,7 @@ WebGL.prototype.initShaders = function(){
     
     this.gl.useProgram(this.shader_program);
     
-    this.shader_program.vertexPostionAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexPosition');
+    this.shader_program.vertexPositionAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexPosition');
     this.gl.enableVertexAttribArray(this.shader_program.vertexPositionAttribute);
     
     this.shader_program.vertexColorAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexColor');
@@ -105,11 +103,6 @@ WebGL.prototype.setMatrixUniforms = function(){
     this.gl.uniformMatrix4fv(this.shader_program.pMatrixUniform, false, this.p_matrix);
     this.gl.uniformMatrix4fv(this.shader_program.mvMatrixUniform, false, this.mv_matrix);
 }
-
-var triangle_vertex_position_buffer;
-var triangle_vertex_color_buffer;
-var square_vertex_position_buffer;
-var square_vertex_position_buffer;
 
 WebGL.prototype.initBuffers = function(){
     this.triangle_vertex_position_buffer = this.gl.createBuffer();
