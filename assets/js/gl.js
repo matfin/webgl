@@ -11,12 +11,13 @@ function WebGL(){
     this.mv_matrix;
     this.p_matrix;
     this.cube_vertex_position_buffer;
-    this.cube_vertex_color_buffer;
+    this.cube_vertex_texture_coord_buffer;
     this.cube_vertex_index_buffer;
     this.r_cube;
     this.last_time;
     this.mv_matrix_stack;
     this.animation_frame_id;
+    this.texture;
 }
 
 WebGL.prototype.initGL = function(canvas){
@@ -84,7 +85,6 @@ WebGL.prototype.initShaders = function(){
     var vertex_shader = this.getShader('shader-vs');
     
     this.shader_program = this.gl.createProgram();
-    
     this.gl.attachShader(this.shader_program, vertex_shader);
     this.gl.attachShader(this.shader_program, fragment_shader);
     this.gl.linkProgram(this.shader_program);
@@ -99,11 +99,33 @@ WebGL.prototype.initShaders = function(){
     this.shader_program.vertexPositionAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexPosition');
     this.gl.enableVertexAttribArray(this.shader_program.vertexPositionAttribute);
     
-    this.shader_program.vertexColorAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexColor');
-    this.gl.enableVertexAttribArray(this.shader_program.vertexColorAttribute);
+    this.shader_program.textureCoordAttribute = this.gl.getAttribLocation(this.shader_program, 'aTextureCoord');
+    this.gl.enableVertexAttribArray(this.shader_program.textureCoordAttribute);
     
     this.shader_program.pMatrixUniform = this.gl.getUniformLocation(this.shader_program, 'uPMatrix');
     this.shader_program.mvMatrixUniform = this.gl.getUniformLocation(this.shader_program, 'uMVMatrix'); 
+    this.shader_program.samplerUniform = this.gl.getUniformLocation(this.shader_program, 'uSampler');
+}
+
+WebGL.prototype.handleLoadedTexture = function(texture){
+    this.texture = texture;
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.texture.image);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+}   
+
+WebGL.prototype.initTexture = function(texture_img_src){
+   var texture = this.gl.createTexture();
+   texture.image = new Image();
+   var self = this;
+   texture.image.onload = function(){
+       console.log('The image has loaded');
+       self.handleLoadedTexture(texture);
+   }
+   texture.image.src = texture_img_src;
 }
 
 WebGL.prototype.setMatrixUniforms = function(){    
@@ -172,28 +194,48 @@ WebGL.prototype.initBuffers = function(){
     this.cube_vertex_position_buffer.itemSize = 3;
     this.cube_vertex_position_buffer.numItems = 24;
     
-    this.cube_vertex_color_buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_color_buffer);
-    colors = [
-        [1.0, 0.0, 0.0, 1.0], //Front face
-        [1.0, 1.0, 0.0, 1.0], //Back face
-        [0.0, 1.0, 0.0, 1.0], //Top face
-        [1.0, 0.5, 0.5, 1.0], //Bottom face
-        [1.0, 0.0, 1.0, 1.0], //Right face
-        [0.0, 0.0, 1.0, 1.0] //Left face
+    this.cube_vertex_texture_coord_buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_texture_coord_buffer);
+    var texture_coords = [
+        //Front face
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        
+        //Back face
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        0.0, 0.0,
+        
+        //Top face
+        0.0, 1.0,
+        0.0, 0.0, 
+        1.0, 0.0,
+        1.0, 1.0,
+        
+        //Bottom face
+        1.0, 1.0, 
+        0.0, 1.0,
+        0.0, 0.0,
+        1.0, 0.0,
+        
+        //Right face
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        0.0, 0.0,
+        
+        //Left face
+        0.0, 0.0, 
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0
     ];
-    
-    var unpacked_colors = [];
-    for(var i in colors){
-        var color = colors[i];
-        for(var j = 0; j < 4; j++){
-            unpacked_colors = unpacked_colors.concat(color);
-        }
-    }
-    
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(unpacked_colors), this.gl.STATIC_DRAW);
-    this.cube_vertex_color_buffer.itemSize = 4;
-    this.cube_vertex_color_buffer.numItems = 24;
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(texture_coords), this.gl.STATIC_DRAW);
+    this.cube_vertex_texture_coord_buffer.itemSize = 2;
+    this.cube_vertex_texture_coord_buffer.numItems = 24;
     
     this.cube_vertex_index_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.cube_vertex_index_buffer);
@@ -227,14 +269,16 @@ WebGL.prototype.drawScene = function(){
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_position_buffer);
     this.gl.vertexAttribPointer(this.shader_program.vertexPositionAttribute, this.cube_vertex_position_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
    
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_color_buffer);
-    this.gl.vertexAttribPointer(this.shader_program.vertexColorAttribute, this.cube_vertex_color_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_texture_coord_buffer);
+    this.gl.vertexAttribPointer(this.shader_program.vertexTextureCoordAttribute, this.cube_vertex_texture_coord_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
+    
+    this.gl.activeTexture(this.gl.TEXTURE0);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    this.gl.uniform1i(this.shader_program.sampleUniform, 0);
     
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.cube_vertex_index_buffer);
     this.setMatrixUniforms();
     this.gl.drawElements(this.gl.TRIANGLES, this.cube_vertex_index_buffer.numItems, this.gl.UNSIGNED_SHORT, 0);   
-    
-    //this.mvPopMatrix();
 }
 
 WebGL.prototype.animate = function(){
@@ -282,7 +326,7 @@ WebGL.prototype.start = function(){
     this.initGL(canvas);
     this.initShaders();
     this.initBuffers();
-    
+    this.initTexture('/assets/textures/texture.png');
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     
