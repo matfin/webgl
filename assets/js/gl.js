@@ -10,12 +10,9 @@ function WebGL(){
     this.shader_program;
     this.mv_matrix;
     this.p_matrix;
-    this.pyramid_vertex_position_buffer;
-    this.pyramid_vertex_color_buffer;
     this.cube_vertex_position_buffer;
     this.cube_vertex_color_buffer;
     this.cube_vertex_index_buffer;
-    this.r_pyramid;
     this.r_cube;
     this.last_time;
     this.mv_matrix_stack;
@@ -32,7 +29,6 @@ WebGL.prototype.initGL = function(canvas){
         this.p_matrix = mat4.create();
         this.mv_matrix_stack = [];
         
-        this.r_pyramid = 0;
         this.r_cube = 0;
         this.last_time = 0;
                 
@@ -132,62 +128,7 @@ WebGL.prototype.degToRad = function(degrees){
     return degrees * Math.PI / 180;
 }
 
-
 WebGL.prototype.initBuffers = function(){
-    this.pyramid_vertex_position_buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.pyramid_vertex_position_buffer);
-    var vertices = [
-        //Front face
-        0.0, 1.0, 0.0,
-        -1.0, -1.0, 1.0,
-        1.0, -1.0, 1.0,
-        
-        //Right face
-        0.0, 1.0, 0.0,
-        1.0, -1.0, 1.0,
-        1.0, -1.0, -1.0,
-        
-        //Back face
-        0.0, 1.0, 0.0,
-        1.0, -1.0, -1.0,
-        -1.0, -1.0, -1.0,
-    
-        //Left face
-        0.0, 1.0, 0.0,
-        -1.0, -1.0, -1.0,
-        -1.0, -1.0, 1.0
-    ];
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
-    this.pyramid_vertex_position_buffer.itemSize = 3;
-    this.pyramid_vertex_position_buffer.numItems = 12;
-    
-    this.pyramid_vertex_color_buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.pyramid_vertex_color_buffer);
-    var colors = [
-        //Front face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        
-        //Right face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        
-        //Back Face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        
-        //Left Face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0
-    ];
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors), this.gl.STATIC_DRAW);
-    this.pyramid_vertex_color_buffer.itemSize = 4;
-    this.pyramid_vertex_color_buffer.numItems = 12;
-    
     this.cube_vertex_position_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_position_buffer);
     vertices = [
@@ -277,29 +218,12 @@ WebGL.prototype.drawScene = function(){
     
     mat4.identity(this.mv_matrix);
     
-    mat4.translate(this.mv_matrix, [-1.5, 0.0, -8.0]);
+    mat4.translate(this.mv_matrix, [0.0, 0.0, -5.0]);
     
-    this.mvPushMatrix();
-    mat4.rotate(this.mv_matrix, this.degToRad(this.r_pyramid), [0, 1, 0]);
-    
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.pyramid_vertex_position_buffer);
-    this.gl.vertexAttribPointer(this.shader_program.vertexPositionAttribute, this.pyramid_vertex_position_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
-    
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.pyramid_vertex_color_buffer);
-    this.gl.vertexAttribPointer(this.shader_program.vertexColorAttribute, this.pyramid_vertex_color_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
-    
-    this.setMatrixUniforms();
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.pyramid_vertex_position_buffer.numItems);
-    
-    this.mvPopMatrix();   
-    
-    
-    mat4.translate(this.mv_matrix, [3.0, 0.0, 0.0]);
-    
-    this.mvPushMatrix();
-    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [1, 1, 1]);
-    
-    
+    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [1, 0, 0]);
+    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [0, 1, 0]);
+    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [0, 0, 1]);
+
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_position_buffer);
     this.gl.vertexAttribPointer(this.shader_program.vertexPositionAttribute, this.cube_vertex_position_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
    
@@ -310,14 +234,13 @@ WebGL.prototype.drawScene = function(){
     this.setMatrixUniforms();
     this.gl.drawElements(this.gl.TRIANGLES, this.cube_vertex_index_buffer.numItems, this.gl.UNSIGNED_SHORT, 0);   
     
-    this.mvPopMatrix();
+    //this.mvPopMatrix();
 }
 
 WebGL.prototype.animate = function(){
     var time_now = new Date().getTime();
     if(this.last_time != 0){
         var elapsed = time_now - this.last_time;
-        this.r_pyramid += (90 * elapsed) / 1000.0;
         this.r_cube -= (75 * elapsed) / 1000.0;
     }
     this.last_time = time_now;
