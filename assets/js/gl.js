@@ -1,5 +1,5 @@
 /* 
- *  WebGL in object orient JS
+ *  WebGL in object oriented JS
  *  Matt Finucane
  *  2013 
  */
@@ -17,7 +17,14 @@ function WebGL(){
     this.last_time;
     this.mv_matrix_stack;
     this.animation_frame_id;
-    this.texture;
+    this.textures;
+    
+    this.x_rot;
+    this.x_speed;
+    this.y_rot;
+    this.y_speed;
+    this.z;
+    this.filter;
 }
 
 WebGL.prototype.initGL = function(canvas){
@@ -30,8 +37,20 @@ WebGL.prototype.initGL = function(canvas){
         this.p_matrix = mat4.create();
         this.mv_matrix_stack = [];
         
+        this.textures = Array();
+        
         this.r_cube = 0;
         this.last_time = 0;
+        
+        this.x_rot = 0;
+        this.x_speed = 0;
+        
+        this.y_rot = 0;
+        this.y_speed = 0;
+        
+        this.z = -5.0;
+        
+        this.filter = 0;
                 
         this.gl_debugger = WebGLDebugUtils.makeDebugContext(this.gl);
     }
@@ -107,25 +126,43 @@ WebGL.prototype.initShaders = function(){
     this.shader_program.samplerUniform = this.gl.getUniformLocation(this.shader_program, 'uSampler');
 }
 
-WebGL.prototype.handleLoadedTexture = function(texture){
-    this.texture = texture;
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+WebGL.prototype.handleLoadedTexture = function(textures){
+    this.textures = textures;
     this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.texture.image);
+    
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[0]);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.textures[0].image);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+    
+    this.gl.bindTexture(this.gl.TEXTURE_2D, textures[1]);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.textures[1].image);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+    
+    this.gl.bindTexture(this.gl.TEXTURE_2D, textures[2]);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.textures[2].image);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+    
+    this.gl.generateMipmap(this.gl.TEXTURE_2D);
+    
     this.gl.bindTexture(this.gl.TEXTURE_2D, null);
 }   
 
 WebGL.prototype.initTexture = function(texture_img_src){
-   var texture = this.gl.createTexture();
-   texture.image = new Image();
-   var self = this;
-   texture.image.onload = function(){
-       console.log('The image has loaded');
-       self.handleLoadedTexture(texture);
-   }
-   texture.image.src = texture_img_src;
+    var texture_image = new Image();
+    var textures = Array();
+    for(var i = 0; i < 3; i++){
+       var texture = this.gl.createTexture();
+       texture.image = texture_image;
+       textures.push(texture);
+    }
+    var self = this;
+    texture_image.onload = function(){
+        self.handleLoadedTexture(textures);
+    }
+    texture_image.src = texture_img_src;
 }
 
 WebGL.prototype.setMatrixUniforms = function(){    
@@ -262,7 +299,7 @@ WebGL.prototype.drawScene = function(){
     
     mat4.translate(this.mv_matrix, [0.0, 0.0, -5.0]);
     
-    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [1, 0, 0]);
+    //mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [1, 0, 0]);
     mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [0, 1, 0]);
     mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [0, 0, 1]);
 
@@ -273,7 +310,7 @@ WebGL.prototype.drawScene = function(){
     this.gl.vertexAttribPointer(this.shader_program.vertexTextureCoordAttribute, this.cube_vertex_texture_coord_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
     
     this.gl.activeTexture(this.gl.TEXTURE0);
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[this.filter]);
     this.gl.uniform1i(this.shader_program.sampleUniform, 0);
     
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.cube_vertex_index_buffer);
@@ -326,7 +363,7 @@ WebGL.prototype.start = function(){
     this.initGL(canvas);
     this.initShaders();
     this.initBuffers();
-    this.initTexture('/assets/textures/texture.png');
+    this.initTexture('/assets/textures/woodenfloor.png');
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     
