@@ -13,7 +13,6 @@ function WebGL(){
     this.cube_vertex_position_buffer;
     this.cube_vertex_texture_coord_buffer;
     this.cube_vertex_index_buffer;
-    this.r_cube;
     this.last_time;
     this.mv_matrix_stack;
     this.animation_frame_id;
@@ -39,7 +38,6 @@ WebGL.prototype.initGL = function(canvas){
         
         this.textures = Array();
         
-        this.r_cube = 0;
         this.last_time = 0;
         
         this.x_rot = 0;
@@ -297,11 +295,10 @@ WebGL.prototype.drawScene = function(){
     
     mat4.identity(this.mv_matrix);
     
-    mat4.translate(this.mv_matrix, [0.0, 0.0, -5.0]);
+    mat4.translate(this.mv_matrix, [0.0, 0.0, this.z]);
     
-    //mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [1, 0, 0]);
-    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [0, 1, 0]);
-    mat4.rotate(this.mv_matrix, this.degToRad(this.r_cube), [0, 0, 1]);
+    mat4.rotate(this.mv_matrix, this.degToRad(this.x_rot), [1, 0, 0]);
+    mat4.rotate(this.mv_matrix, this.degToRad(this.y_rot), [0, 1, 0]);
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_position_buffer);
     this.gl.vertexAttribPointer(this.shader_program.vertexPositionAttribute, this.cube_vertex_position_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
@@ -322,7 +319,8 @@ WebGL.prototype.animate = function(){
     var time_now = new Date().getTime();
     if(this.last_time != 0){
         var elapsed = time_now - this.last_time;
-        this.r_cube -= (75 * elapsed) / 1000.0;
+        this.x_rot -= (this.x_speed * elapsed) / 1000.0;
+        this.y_rot -= (this.y_speed * elapsed) / 1000.0;
     }
     this.last_time = time_now;
 }
