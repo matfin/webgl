@@ -70,9 +70,49 @@
                     Need a browser that supports WebGL? Check out <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a>
                 </p>
             </canvas>
-        </section>
-        <section class="container">
             <form>
+                <fieldset>
+                    <h2>
+                        Textures
+                    </h2>
+                    <label for="texture">
+                        Texture
+                    </label>
+                    <select name="texture">
+                        <option selected value="woodenfloor.png">
+                            Wooden Floor
+                        </option>
+                        <option value="lynsey.png">
+                            Lynsey
+                        </option>
+                        <option value="texture.png">
+                            Photo
+                        </option>
+                        <option value="iqcontent.png">
+                            iQContent
+                        </option>
+                        <option value="me.png">
+                            Me
+                        </option>
+                    </select>
+                </fieldset>
+                <fieldset id="movement">
+                    <h2>
+                        Movement
+                    </h2>
+                    <label for="x_speed">
+                        X
+                    </label>
+                    <input type="range" name="x_speed" min="-200" max="200" step="1" />
+                    <label for="y_speed">
+                        Y
+                    </label>
+                    <input type="range" name="y_speed" min="-200" max="200" step="1" />
+                    <label for="y_speed">
+                        Zoom
+                    </label>
+                    <input type="range" name="z" min="-1000" max="-200" step="1" />
+                </fieldset>
                 <fieldset>
                     <h2>
                         Directional Light Position
@@ -80,15 +120,15 @@
                     <label for="directional_light_x">
                         X
                     </label>
-                    <input type="range" name="directional_light_x" min="-100" max="100.0" step="1" />
+                    <input type="range" name="directional_light_x" min="-100" max="100" step="1" />
                     <label for="directional_light_y">
                         Y
                     </label>
-                    <input type="range" name="directional_light_y" min="-100" max="100.0" step="1" />
+                    <input type="range" name="directional_light_y" min="-100" max="100" step="1" />
                     <label for="directional_light_z">
                         Z
                     </label>
-                    <input type="range" name="directional_light_z" min="-100" max="100.0" step="1" />
+                    <input type="range" name="directional_light_z" min="-100" max="100" step="1" />
                 </fieldset>
                 <fieldset>
                     <h2>

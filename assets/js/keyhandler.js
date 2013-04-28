@@ -18,43 +18,15 @@ KeyHandler.prototype.initEvents = function(){
     document.onkeydown = function(event){
         self.handleKeyPress(event);
     }
+    this.handleTextureChange();
 }
 
-KeyHandler.prototype.handleKeyPress = function(event){
-    switch(event.keyCode){
-        //Up
-        case 38: {
-            this.client.x_speed -= 3;
-            break;
-        }
-        //Down
-        case 40: {
-            this.client.x_speed += 3;
-            break;
-        }
-        //Left
-        case 37: {
-            this.client.y_speed -= 3;
-            break;
-        }
-        //Right
-        case 39: {
-            this.client.y_speed += 3;
-            break;
-        }
-        //PageUp
-        case 33: {
-            this.client.z -=0.05;
-            break;
-        }
-        //PageDn
-        case 34: {
-            this.client.z +=0.05;
-            break;
-        }
+KeyHandler.prototype.handleTextureChange = function(){
+    var self = this;
+    document.querySelectorAll('select[name="texture"]')[0].onchange = function(){
+        self.client.initTexture('assets/textures/' + this.value);
     }
 }
-
 
 
 

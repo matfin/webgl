@@ -59,7 +59,7 @@ WebGL.prototype.initGL = function(canvas){
         this.y_rot = 0;
         this.y_speed = 0;
         
-        this.z = -5.0;
+        //this.z = -500;
         
         this.filter = 0;
                 
@@ -365,7 +365,7 @@ WebGL.prototype.drawScene = function(){
     
     mat4.identity(this.mv_matrix);
     
-    mat4.translate(this.mv_matrix, [0.0, 0.0, this.z]);
+    mat4.translate(this.mv_matrix, [0.0, 0.0, parseFloat(this.z / 100)]);
     
     mat4.rotate(this.mv_matrix, this.degToRad(this.x_rot), [1, 0, 0]);
     mat4.rotate(this.mv_matrix, this.degToRad(this.y_rot), [0, 1, 0]);
@@ -391,9 +391,9 @@ WebGL.prototype.drawScene = function(){
         parseFloat(this.ambient_color_b / 255.0)
     );
     var lighting_direction = [
-        parseFloat(this.directional_light_x / 100),
-        parseFloat(this.directional_light_y / 100),
-        parseFloat(this.directional_light_z / 100)
+        parseFloat(this.directional_light_x / 10000),
+        parseFloat(this.directional_light_y / 10000),
+        parseFloat(this.directional_light_z / 100000)
     ]
     
     var adjusted_ld = vec3.create();
