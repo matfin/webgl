@@ -37,6 +37,8 @@ function WebGL(){
     this.ambient_colour_r;
     this.ambient_colour_g;
     this.ambient_colour_b;
+    
+    this.alpha;
 }
 
 WebGL.prototype.initGL = function(canvas){
@@ -144,6 +146,7 @@ WebGL.prototype.initShaders = function(){
     this.shader_program.ambientColorUniform = this.gl.getUniformLocation(this.shader_program, 'uAmbientColor');
     this.shader_program.lightingDirectionUniform = this.gl.getUniformLocation(this.shader_program, 'uLightingDirection');
     this.shader_program.directionalColorUniform = this.gl.getUniformLocation(this.shader_program, 'uDirectionalColor');
+    this.shader_program.alphaUniform = this.gl.getUniformLocation(this.shader_program, 'uAlpha');
 }
 
 WebGL.prototype.handleLoadedTexture = function(textures){
@@ -382,6 +385,11 @@ WebGL.prototype.drawScene = function(){
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[this.filter]);
     this.gl.uniform1i(this.shader_program.sampleUniform, 0);
+    
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+    this.gl.enable(this.gl.BLEND);
+    this.gl.disable(this.gl.DEPTH_TEST);
+    this.gl.uniform1f(this.shader_program.alphaUniform, (this.alpha / 100));
     
     this.gl.uniform1i(this.shader_program.useLightingUniform, true);
     this.gl.uniform3f(

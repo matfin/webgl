@@ -48,6 +48,11 @@ section.container{
             input[type='range'], label{
                 line-height: 1.2em;
             }
+            label[for='texture']{
+                display: inline;
+                float: left;
+                min-width: 200px;
+            }
         }
         fieldset#movement{
             label{

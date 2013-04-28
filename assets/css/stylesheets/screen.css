@@ -133,14 +133,20 @@ section.container form fieldset {
 section.container form fieldset input[type='range'], section.container form fieldset label {
   line-height: 1.2em;
 }
-/* line 53, ../sass/screen.scss */
+/* line 51, ../sass/screen.scss */
+section.container form fieldset label[for='texture'] {
+  display: inline;
+  float: left;
+  min-width: 200px;
+}
+/* line 58, ../sass/screen.scss */
 section.container form fieldset#movement label {
   display: inline;
   float: left;
   clear: left;
   min-width: 200px;
 }
-/* line 59, ../sass/screen.scss */
+/* line 64, ../sass/screen.scss */
 section.container form fieldset#movement input[type="range"] {
   display: inline;
   float: left;

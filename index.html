@@ -22,11 +22,13 @@
             varying vec2 vTextureCoord;
             varying vec3 vLightWeighting;
 
+            uniform float uAlpha;
+            
             uniform sampler2D uSampler;
             
             void main(void) {
                 vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-                gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+                gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a * uAlpha);
             }
         </script>
         <script id="shader-vs" type="x-shader/x-vertex">
@@ -95,6 +97,15 @@
                             Me
                         </option>
                     </select>
+                </fieldset>
+                <fieldset>
+                    <h2>
+                        Blending
+                    </h2>
+                    <label for="alpha">
+                        Alpha
+                    </label>
+                    <input type="range" name="alpha" min="1" max="100" step="1" />
                 </fieldset>
                 <fieldset id="movement">
                     <h2>
