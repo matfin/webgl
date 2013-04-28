@@ -21,7 +21,6 @@ KeyHandler.prototype.initEvents = function(){
 }
 
 KeyHandler.prototype.handleKeyPress = function(event){
-    console.log(event.keyCode);
     switch(event.keyCode){
         //Up
         case 38: {
@@ -45,12 +44,12 @@ KeyHandler.prototype.handleKeyPress = function(event){
         }
         //PageUp
         case 33: {
-            this.z > 1.0 ? this.z -= 0.2:this.z;
+            this.client.z -=0.05;
             break;
         }
         //PageDn
         case 34: {
-            this.z < 5.0 ? this.z += 0.2:this.z;
+            this.client.z +=0.05;
             break;
         }
     }

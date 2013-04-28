@@ -1,26 +1,50 @@
-/* Welcome to Compass.
- * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/*
+*   Compass style for WebGL Canvas and form
+*   Matt Finucane. April 2013.
+*/
 
 @import "compass/reset";
 @import "compass/css3/box";
+@import "compass/css3/border-radius";
 
 html, body{
     width: 100%;
     height: 100%;
 }
 
+body{
+    font-size: 1.0em;
+    font-family: sans-serif;
+}
+
 section.container{  
     width: 100%;
-    height: 100%;
     @include display-box;
     @include box-align(center);
     @include box-pack(center);
-}
-
-canvas{
-    width: 500px;
-    height: 500px;
-    border: 1px solid #ccc;
+    canvas{
+        width: 500px;
+        height: 500px;
+        border: 1px solid #ccc;
+    }
+    form{
+        margin: 10px 0px 0px 0px;
+        padding: 10px;
+        width: 480px;
+        background-color: #ccc;
+        @include border-radius(10px);
+        h2, fieldset{
+            margin: 5px 0px 10px 0px;
+        }
+        h2{
+            font-weight: bold;
+            
+        }
+        fieldset{
+            margin: 5px 0px 20px 0px;
+            input[type='range'], label{
+                line-height: 1.2em;
+            }
+        }
+    }
 }
