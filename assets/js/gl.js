@@ -391,9 +391,9 @@ WebGL.prototype.drawScene = function(){
         parseFloat(this.ambient_color_b / 255.0)
     );
     var lighting_direction = [
-        parseFloat(this.directional_light_x / 10000),
-        parseFloat(this.directional_light_y / 10000),
-        parseFloat(this.directional_light_z / 100000)
+        parseFloat(this.directional_light_x / 100),
+        parseFloat(this.directional_light_y / 100),
+        parseFloat(this.directional_light_z / 100)
     ]
     
     var adjusted_ld = vec3.create();
