@@ -5,4 +5,7 @@ onload = function(){
     
     keyhandler = new KeyHandler();
     keyhandler.init(mygl);
+    
+    lightinghandler = new LightingHandler();
+    lightinghandler.init(mygl);
 }

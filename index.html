@@ -13,12 +13,14 @@
         <script type="text/javascript" src="/assets/js/webgl-debug.js"></script>
         <script type="text/javascript" src="/assets/js/gl.js"></script>
         <script type="text/javascript" src="/assets/js/keyhandler.js"></script>
+        <script type="text/javascript" src="/assets/js/lightinghandler.js"></script>
         <script type="text/javascript" src="/assets/js/main.js"></script>
         <!-- Shaders and fragments go in here -->
         <script id="shader-fs" type="x-shader/x-fragment">
             precision mediump float;
 
             varying vec2 vTextureCoord;
+            
 
             uniform sampler2D uSampler;
             
