@@ -11,6 +11,7 @@ function WebGL(){
     this.mv_matrix;
     this.p_matrix;
     this.cube_vertex_position_buffer;
+    this.cube_vertex_normal_buffer;
     this.cube_vertex_texture_coord_buffer;
     this.cube_vertex_index_buffer;
     this.last_time;
@@ -24,6 +25,18 @@ function WebGL(){
     this.y_speed;
     this.z;
     this.filter;
+    
+    this.directional_light_x;
+    this.directional_light_y;
+    this.directional_light_z;
+    
+    this.directional_color_r;
+    this.directional_color_g;
+    this.directional_color_b;
+    
+    this.ambient_colour_r;
+    this.ambient_colour_g;
+    this.ambient_colour_b;
 }
 
 WebGL.prototype.initGL = function(canvas){
@@ -116,12 +129,21 @@ WebGL.prototype.initShaders = function(){
     this.shader_program.vertexPositionAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexPosition');
     this.gl.enableVertexAttribArray(this.shader_program.vertexPositionAttribute);
     
+    this.shader_program.vertexNormalAttribute = this.gl.getAttribLocation(this.shader_program, 'aVertexNormal');
+    this.gl.enableVertexAttribArray(this.shader_program.vertexNormalAttribute);
+    
     this.shader_program.textureCoordAttribute = this.gl.getAttribLocation(this.shader_program, 'aTextureCoord');
     this.gl.enableVertexAttribArray(this.shader_program.textureCoordAttribute);
     
     this.shader_program.pMatrixUniform = this.gl.getUniformLocation(this.shader_program, 'uPMatrix');
     this.shader_program.mvMatrixUniform = this.gl.getUniformLocation(this.shader_program, 'uMVMatrix'); 
+    this.shader_program.nMatrixUniform = this.gl.getUniformLocation(this.shader_program, 'uNMatrix');
     this.shader_program.samplerUniform = this.gl.getUniformLocation(this.shader_program, 'uSampler');
+
+    this.shader_program.useLightingUniform = this.gl.getUniformLocation(this.shader_program, 'uUseLighting');
+    this.shader_program.ambientColorUniform = this.gl.getUniformLocation(this.shader_program, 'uAmbientColor');
+    this.shader_program.lightingDirectionUniform = this.gl.getUniformLocation(this.shader_program, 'uLightingDirection');
+    this.shader_program.directionalColorUniform = this.gl.getUniformLocation(this.shader_program, 'uDirectionalColor');
 }
 
 WebGL.prototype.handleLoadedTexture = function(textures){
@@ -166,6 +188,11 @@ WebGL.prototype.initTexture = function(texture_img_src){
 WebGL.prototype.setMatrixUniforms = function(){    
     this.gl.uniformMatrix4fv(this.shader_program.pMatrixUniform, false, this.p_matrix);
     this.gl.uniformMatrix4fv(this.shader_program.mvMatrixUniform, false, this.mv_matrix);
+    
+    var normal_matrix = mat3.create();
+    mat4.toInverseMat3(this.mv_matrix, normal_matrix);
+    mat3.transpose(normal_matrix);
+    this.gl.uniformMatrix3fv(this.shader_program.nMatrixUniform, false, normal_matrix);
 }
 
 WebGL.prototype.mvPushMatrix = function(){
@@ -228,6 +255,49 @@ WebGL.prototype.initBuffers = function(){
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
     this.cube_vertex_position_buffer.itemSize = 3;
     this.cube_vertex_position_buffer.numItems = 24;
+    
+    this.cube_vertex_normal_buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_normal_buffer);
+    var vertex_normals = [
+        //Front face
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        
+        //Back face
+        0.0, 0.0, -1.0,
+        0.0, 0.0, -1.0,
+        0.0, 0.0, -1.0,
+        0.0, 0.0, -1.0,
+        
+        //Top face
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        
+        //Bottom face
+        0.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        
+        //Right face
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        
+        //Left face
+        -1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0
+    ];
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertex_normals), this.gl.STATIC_DRAW);
+    this.cube_vertex_normal_buffer.itemSize = 3;
+    this.cube_vertex_normal_buffer.numItems = 24;
     
     this.cube_vertex_texture_coord_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_texture_coord_buffer);
@@ -303,6 +373,9 @@ WebGL.prototype.drawScene = function(){
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_position_buffer);
     this.gl.vertexAttribPointer(this.shader_program.vertexPositionAttribute, this.cube_vertex_position_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
    
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_normal_buffer);
+    this.gl.vertexAttribPointer(this.shader_program.vertexNormalAttribute, this.cube_vertex_normal_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
+   
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.cube_vertex_texture_coord_buffer);
     this.gl.vertexAttribPointer(this.shader_program.vertexTextureCoordAttribute, this.cube_vertex_texture_coord_buffer.itemSize, this.gl.FLOAT, false, 0, 0);
     
@@ -310,6 +383,31 @@ WebGL.prototype.drawScene = function(){
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[this.filter]);
     this.gl.uniform1i(this.shader_program.sampleUniform, 0);
     
+    this.gl.uniform1i(this.shader_program.useLightingUniform, true);
+    this.gl.uniform3f(
+        this.shader_program.ambientColorUniform,
+        parseFloat(this.ambient_color_r / 255.0),
+        parseFloat(this.ambient_color_g / 255.0),
+        parseFloat(this.ambient_color_b / 255.0)
+    );
+    var lighting_direction = [
+        parseFloat(this.directional_light_x / 100),
+        parseFloat(this.directional_light_y / 100),
+        parseFloat(this.directional_light_z / 100)
+    ]
+    
+    var adjusted_ld = vec3.create();
+    vec3.normalize(lighting_direction, adjusted_ld);
+    vec3.scale(adjusted_ld, -1);
+    this.gl.uniform3fv(this.shader_program.lightingDirectionUniform, adjusted_ld);
+    
+    this.gl.uniform3f(
+        this.shader_program.directionalColorUniform,
+        parseFloat(this.directional_color_r / 255.0),
+        parseFloat(this.directional_color_g / 255.0),
+        parseFloat(this.directional_color_b / 255.0)
+    );
+       
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.cube_vertex_index_buffer);
     this.setMatrixUniforms();
     this.gl.drawElements(this.gl.TRIANGLES, this.cube_vertex_index_buffer.numItems, this.gl.UNSIGNED_SHORT, 0);   

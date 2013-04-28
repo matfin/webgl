@@ -16,18 +16,20 @@ LightingHandler.prototype.init = function(client){
 }
 
 LightingHandler.prototype.attachBehaviours = function(){
+    var self = this;
     for(range_input_index in this.range_inputs){
         range_input = this.range_inputs[range_input_index];
+        /*
+         *  Set the values for mygl initially.
+         *  Lighting (directional, ambient) and
+         *  Directional lighting position.
+         */
+        self.client[range_input.name] = range_input.value;
         range_input.onchange = function(){
-            console.log(this.name + ': ' + this.value);
+            /*
+             *  Then set the values on change.
+             */
+            self.client[this.name] = this.value;
         }
     }
-    /*
-    this.range_inputs.forEach(function(range_input){
-       range_input.onchange = function(){
-           console.log(this.value);
-       } 
-    });
-    */
 }
-
