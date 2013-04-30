@@ -255,6 +255,7 @@ WebGL.prototype.initBuffers = function(){
         -1.0, 1.0, 1.0,
         -1.0, 1.0, -1.0
     ];
+    
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
     this.cube_vertex_position_buffer.itemSize = 3;
     this.cube_vertex_position_buffer.numItems = 24;
@@ -365,7 +366,6 @@ WebGL.prototype.drawScene = function(){
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     
     mat4.perspective(45, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 100.0, this.p_matrix);
-    
     mat4.identity(this.mv_matrix);
     
     mat4.translate(this.mv_matrix, [0.0, 0.0, parseFloat(this.z / 100)]);
