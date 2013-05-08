@@ -6,17 +6,9 @@
 @import "compass/reset";
 @import "compass/css3/box";
 @import "compass/css3/border-radius";
+@import "mixins";
 
-html, body{
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-}
-
-body{
-    font-size: 1.0em;
-    font-family: sans-serif;
-}
+@include html_body;
 
 section.container{  
     width: 100%;

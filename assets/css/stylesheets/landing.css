@@ -1,6 +1,6 @@
 /*
-*   Compass style for WebGL Canvas and form
-*   Matt Finucane. April 2013.
+    SCSS for the main index landing page.
+    Matt Finucane. May 2013.
 */
 /* line 17, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
@@ -82,77 +82,4 @@ html, body {
 body {
   font-size: 1.0em;
   font-family: sans-serif;
-}
-
-/* line 13, ../sass/cube.scss */
-section.container {
-  width: 100%;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-box;
-  display: box;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-box-align: center;
-  box-align: center;
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -ms-box-pack: center;
-  box-pack: center;
-}
-/* line 18, ../sass/cube.scss */
-section.container canvas, section.container form {
-  margin: 10px;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  -ms-border-radius: 40px;
-  -o-border-radius: 40px;
-  border-radius: 40px;
-}
-/* line 22, ../sass/cube.scss */
-section.container canvas {
-  width: 500px;
-  height: 500px;
-}
-/* line 26, ../sass/cube.scss */
-section.container form {
-  padding: 20px;
-  width: 460px;
-  height: 460px;
-  background-color: #ccc;
-}
-/* line 31, ../sass/cube.scss */
-section.container form h2, section.container form fieldset {
-  margin: 5px 0px 10px 0px;
-}
-/* line 34, ../sass/cube.scss */
-section.container form h2 {
-  font-weight: bold;
-}
-/* line 38, ../sass/cube.scss */
-section.container form fieldset {
-  margin: 5px 0px 20px 0px;
-}
-/* line 40, ../sass/cube.scss */
-section.container form fieldset input[type='range'], section.container form fieldset label {
-  line-height: 1.2em;
-}
-/* line 43, ../sass/cube.scss */
-section.container form fieldset label[for='texture'] {
-  display: inline;
-  float: left;
-  min-width: 200px;
-}
-/* line 50, ../sass/cube.scss */
-section.container form fieldset#movement label {
-  display: inline;
-  float: left;
-  clear: left;
-  min-width: 200px;
-}
-/* line 56, ../sass/cube.scss */
-section.container form fieldset#movement input[type="range"] {
-  display: inline;
-  float: left;
-  clear: right;
 }

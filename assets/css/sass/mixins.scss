@@ -1,0 +1,17 @@
+/*
+    Mixins common to all CSS files for each experiment.
+    Matt Finucane. May 2013.
+*/
+
+@mixin html_body{
+    html, body{
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+    }
+
+    body{
+        font-size: 1.0em;
+        font-family: sans-serif;
+    }
+}
