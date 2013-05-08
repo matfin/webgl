@@ -1,0 +1,4 @@
+RewriteEngine On
+
+RewriteRule     ^/?$                        index.php?page=landing  [L]
+RewriteRule     ^(cube|particles)/?$        index.php?page=$1       [L]

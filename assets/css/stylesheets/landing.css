@@ -83,3 +83,13 @@ body {
   font-size: 1.0em;
   font-family: sans-serif;
 }
+
+/* line 15, ../sass/landing.scss */
+html body {
+  background-color: #19334d;
+  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(10%, #121f2b), color-stop(50%, #1f3347), color-stop(90%, #121f2b));
+  background-image: -webkit-linear-gradient(left, #121f2b 10%, #1f3347 50%, #121f2b 90%);
+  background-image: -moz-linear-gradient(left, #121f2b 10%, #1f3347 50%, #121f2b 90%);
+  background-image: -o-linear-gradient(left, #121f2b 10%, #1f3347 50%, #121f2b 90%);
+  background-image: linear-gradient(left, #121f2b 10%, #1f3347 50%, #121f2b 90%);
+}
