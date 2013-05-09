@@ -15,3 +15,22 @@
         font-family: sans-serif;
     }
 }
+
+@function extrude($numsteps){
+    $output: '';
+    $colour: '';
+    @for $i from 1 through $numsteps{
+        @if($i % 2 == 0){
+            $colour: 'white';
+        }
+        @else{
+            $colour: 'black';
+        }
+        $output: $output + '#{0 - $i}px #{$i}px #{$colour}';
+        @if($i < $numsteps){
+            $output: $output + ',';
+        }
+    }
+    
+    @return unquote($output);
+}
