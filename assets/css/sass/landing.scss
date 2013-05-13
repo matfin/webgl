@@ -11,7 +11,11 @@
 @import "compass/css3/transition";
 @import "compass/css3/images";
 @import "compass/css3/text-shadow";
+@import "compass/css3/font-face";
 @import "mixins";
+
+@include font-face("Mathematical Bold", font-files('/assets/css/fonts/MathematicalBold.ttf'));
+@include font-face("Mathematical", font-files('/assets/css/fonts/Mathematical.ttf'));
 
 @include html_body;
 
@@ -40,15 +44,16 @@ section.container{
     @include box-align(center);
     @include box-pack(center);
     h1{
-        font-size: 3.5em;
+        font-family: 'Mathematical Bold';
+        font-size: 6em;
         color: #fff;
         width: 100%;
         text-align: center;
         margin: 30px 0px 30px 0px;
-        @include filter(blur(10px));
-        @include transition(3s);
+        @include filter(blur(5px));
+        @include transition(0.5s);
         &:hover{
-            @include text-shadow(extrude(60));
+            @include text-shadow(extrude(5));
         }
     }
 }

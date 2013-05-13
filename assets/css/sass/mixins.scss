@@ -26,7 +26,7 @@
         @else{
             $colour: 'black';
         }
-        $output: $output + '#{0 - $i}px #{$i}px #{$colour}';
+        $output: $output + '#{0 - (1 * $i)}px #{1 * $i}px #{$colour}';
         @if($i < $numsteps){
             $output: $output + ',';
         }

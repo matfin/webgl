@@ -71,6 +71,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
     Mixins common to all CSS files for each experiment.
     Matt Finucane. May 2013.
 */
+@font-face {
+  font-family: "Mathematical Bold";
+  src: url(/assets/css/fonts/MathematicalBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: "Mathematical";
+  src: url(/assets/css/fonts/Mathematical.ttf) format('truetype');
+}
+
 /* line 7, ../sass/mixins.scss */
 html, body {
   width: 100%;
@@ -84,7 +94,7 @@ body {
   font-family: sans-serif;
 }
 
-/* line 19, ../sass/landing.scss */
+/* line 23, ../sass/landing.scss */
 html body {
   background-color: #19334d;
   background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(10%, #121f2b), color-stop(50%, #1f3347), color-stop(90%, #121f2b));
@@ -93,14 +103,14 @@ html body {
   background-image: -o-linear-gradient(left, #121f2b 10%, #1f3347 50%, #121f2b 90%);
   background-image: linear-gradient(left, #121f2b 10%, #1f3347 50%, #121f2b 90%);
 }
-/* line 30, ../sass/landing.scss */
+/* line 34, ../sass/landing.scss */
 html body:hover h1 {
   -webkit-filter: blur(0px);
   -moz-filter: blur(0px);
   filter: blur(0px);
 }
 
-/* line 37, ../sass/landing.scss */
+/* line 41, ../sass/landing.scss */
 section.container {
   width: 100%;
   display: -webkit-box;
@@ -116,22 +126,23 @@ section.container {
   -ms-box-pack: center;
   box-pack: center;
 }
-/* line 42, ../sass/landing.scss */
+/* line 46, ../sass/landing.scss */
 section.container h1 {
-  font-size: 3.5em;
+  font-family: 'Mathematical Bold';
+  font-size: 6em;
   color: #fff;
   width: 100%;
   text-align: center;
   margin: 30px 0px 30px 0px;
-  -webkit-filter: blur(10px);
-  -moz-filter: blur(10px);
-  filter: blur(10px);
-  -webkit-transition: 3s;
-  -moz-transition: 3s;
-  -o-transition: 3s;
-  transition: 3s;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  filter: blur(5px);
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
 }
-/* line 50, ../sass/landing.scss */
+/* line 55, ../sass/landing.scss */
 section.container h1:hover {
-  text-shadow: -1px 1px black,-2px 2px white,-3px 3px black,-4px 4px white,-5px 5px black,-6px 6px white,-7px 7px black,-8px 8px white,-9px 9px black,-10px 10px white,-11px 11px black,-12px 12px white,-13px 13px black,-14px 14px white,-15px 15px black,-16px 16px white,-17px 17px black,-18px 18px white,-19px 19px black,-20px 20px white,-21px 21px black,-22px 22px white,-23px 23px black,-24px 24px white,-25px 25px black,-26px 26px white,-27px 27px black,-28px 28px white,-29px 29px black,-30px 30px white,-31px 31px black,-32px 32px white,-33px 33px black,-34px 34px white,-35px 35px black,-36px 36px white,-37px 37px black,-38px 38px white,-39px 39px black,-40px 40px white,-41px 41px black,-42px 42px white,-43px 43px black,-44px 44px white,-45px 45px black,-46px 46px white,-47px 47px black,-48px 48px white,-49px 49px black,-50px 50px white,-51px 51px black,-52px 52px white,-53px 53px black,-54px 54px white,-55px 55px black,-56px 56px white,-57px 57px black,-58px 58px white,-59px 59px black,-60px 60px white;
+  text-shadow: -1px 1px black,-2px 2px white,-3px 3px black,-4px 4px white,-5px 5px black;
 }
